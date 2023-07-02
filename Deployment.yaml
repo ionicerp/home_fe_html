@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ionic-deployment-home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ionic-home
+  template:
+    metadata:
+      labels:
+        app: ionic-home
+    spec:
+      containers:
+      - name: ionic-home
+        image: ghcr.io/ionicerp/home_fe_html:latest
+        # imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: my-github-secret
+      # - name: my-regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ionic-service-home
+spec:
+  selector:
+    app: ionic-home
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  # type: LoadBalancer
